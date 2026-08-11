@@ -10,12 +10,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-"""ITF public Bazel interface"""
 
-load("@score_itf//bazel:copy_files_onto_image.bzl", local_copy_files_onto_image = "copy_files_onto_image")
-load("@score_itf//bazel:py_itf_test.bzl", local_py_itf_test = "py_itf_test")
-load("@score_itf//bazel:py_itf_unittest.bzl", local_py_itf_unittest = "py_itf_unittest")
 
-py_itf_test = local_py_itf_test
-py_itf_unittest = local_py_itf_unittest
-copy_files_onto_image = local_copy_files_onto_image
+def test_overlay_marker_present(target):
+    exit_code, output = target.execute("cat /etc/score_itf/score_itf_overlay_marker")
+    assert exit_code == 0
+    assert output.strip().decode() in ["ubuntu-overlay", "ebclfsa-overlay"], (
+        "Overlay marker file does not contain expected value: " + output.strip().decode()
+    )

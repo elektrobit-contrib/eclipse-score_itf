@@ -234,6 +234,29 @@ py_itf_test(
 )
 
 py_itf_test(
+    name = "test_ebclfsa_overlay",
+    srcs = [
+        "test_qemu_overlay.py",
+    ],
+    args = [
+        "--qemu-config=$(location @os_images//ebclfsa_aarch64:qemu_config)",
+        "--qemu-kernel=$(location @os_images//ebclfsa_aarch64:kernel)",
+        "--qemu-rootfs=$(location //test/resources/ebclfsa_aarch64:image_overlay)",
+    ],
+    data = [
+        "//test/resources/ebclfsa_aarch64:image_overlay",
+        "@os_images//ebclfsa_aarch64:kernel",
+        "@os_images//ebclfsa_aarch64:qemu_config",
+    ],
+    plugins = [
+        "//score/itf/plugins:qemu_plugin",
+    ],
+    tags = [
+        "manual",
+    ],
+)
+
+py_itf_test(
     name = "test_ubuntu_ping",
     srcs = [
         "test_ping.py",
@@ -254,13 +277,36 @@ py_itf_test(
     ],
 )
 
+py_itf_test(
+    name = "test_ubuntu_overlay",
+    srcs = [
+        "test_qemu_overlay.py",
+    ],
+    args = [
+        "--qemu-config=$(location @os_images//ubuntu_x86_64:qemu_config)",
+        "--qemu-rootfs=$(location //test/resources/ubuntu_x86_64:image_overlay)",
+    ],
+    data = [
+        "//test/resources/ubuntu_x86_64:image_overlay",
+        "@os_images//ubuntu_x86_64:qemu_config",
+    ],
+    plugins = [
+        "//score/itf/plugins:qemu_plugin",
+    ],
+    tags = [
+        "manual",
+    ],
+)
+
 test_suite(
     name = "linux_qemu_tests",
     tags = [
         "manual",
     ],
     tests = [
+        ":test_ebclfsa_overlay",
         ":test_ebclfsa_ping",
+        ":test_ubuntu_overlay",
         ":test_ubuntu_ping",
     ],
 )
